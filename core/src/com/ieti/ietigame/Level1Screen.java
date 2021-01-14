@@ -12,12 +12,19 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 public class Level1Screen implements Screen {
     final IetiGame game;
     OrthographicCamera camera;
-    Texture ietiSheet;
+
+    Texture background;
+    TextureRegion bgRegion;
+    public int fonsx;
+    public int fonsy;
+
     Animation<TextureRegion> walkLeft;
     Animation<TextureRegion> walkRight;
     Animation<TextureRegion> walkUp;
     Animation<TextureRegion> walkDown;
     float stateTime;
+    // personatge
+    Texture ietiSheet;
     int FRAME_ROWS = 5;
     int FRAME_COLS = 4;
 
@@ -26,6 +33,14 @@ public class Level1Screen implements Screen {
         camera = new OrthographicCamera();
         camera.setToOrtho(false,800,480);
 
+        // bg
+        background = new Texture(Gdx.files.internal("background12.jpeg"));
+        background.setWrap(Texture.TextureWrap.MirroredRepeat, Texture.TextureWrap.MirroredRepeat);
+        bgRegion = new TextureRegion(background,0,0,game.SCR_WIDTH,game.SCR_HEIGHT);
+        fonsx = 0;
+        fonsy = 0;
+
+        // personatge IETI
         ietiSheet = new Texture("ieti-walk.png");
         TextureRegion tmp[][] = TextureRegion.split( ietiSheet,
                                 ietiSheet.getWidth()/FRAME_COLS,
@@ -71,24 +86,35 @@ public class Level1Screen implements Screen {
         stateTime += delta;
         camera.update();
 
+        // CONTROLS
+        TextureRegion frame = walkDown.getKeyFrames()[0];
+        // triem animació i movem background segons la tecla premuda
+        if(Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
+            frame = walkLeft.getKeyFrame(stateTime, true);
+            fonsx -= 2;
+            bgRegion.setRegion(fonsx,fonsy,fonsx+game.SCR_WIDTH,fonsy+game.SCR_HEIGHT);
+        } else if(Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
+            frame = walkRight.getKeyFrame(stateTime, true);
+            fonsx += 2;
+            bgRegion.setRegion(fonsx,fonsy,fonsx+game.SCR_WIDTH,fonsy+game.SCR_HEIGHT);
+        } else if(Gdx.input.isKeyPressed(Input.Keys.UP)) {
+            frame = walkUp.getKeyFrame(stateTime, true);
+            fonsy -= 1;
+            bgRegion.setRegion(fonsx,fonsy,fonsx+game.SCR_WIDTH,fonsy+game.SCR_HEIGHT);
+        } else if(Gdx.input.isKeyPressed(Input.Keys.DOWN)) {
+            frame = walkDown.getKeyFrame(stateTime, true);
+            fonsy += 1;
+            bgRegion.setRegion(fonsx,fonsy,fonsx+game.SCR_WIDTH,fonsy+game.SCR_HEIGHT);
+        }
+
         // PINTA
         game.batch.begin();
-        TextureRegion frame = walkDown.getKeyFrames()[0];
-        // triem animació segons la tecla premuda
-        if(Gdx.input.isKeyPressed(Input.Keys.LEFT))
-            frame = walkLeft.getKeyFrame(stateTime,true);
-        else if(Gdx.input.isKeyPressed(Input.Keys.RIGHT))
-            frame = walkRight.getKeyFrame(stateTime,true);
-        else if(Gdx.input.isKeyPressed(Input.Keys.UP))
-            frame = walkUp.getKeyFrame(stateTime,true);
-        else if(Gdx.input.isKeyPressed(Input.Keys.DOWN))
-            frame = walkDown.getKeyFrame(stateTime,true);
-
+        game.batch.draw(bgRegion,0,0);
         game.batch.draw(frame,380,200);
         game.batch.end();
 
         // Final de nivell
-        if( Gdx.input.isTouched() ) {
+        if( Gdx.input.isKeyPressed(Input.Keys.ESCAPE) ) {
             game.setScreen(new MainMenuScreen(game) );
             dispose();
         }

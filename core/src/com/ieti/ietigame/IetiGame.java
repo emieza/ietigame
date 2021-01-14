@@ -15,6 +15,9 @@ public class IetiGame extends Game {
 	public SpriteBatch batch;
 	public BitmapFont font;
 
+	public int SCR_HEIGHT = 480;
+	public int SCR_WIDTH = 800;
+
 	public void create() {
 		batch = new SpriteBatch();
 		font = new BitmapFont();
@@ -30,32 +33,3 @@ public class IetiGame extends Game {
 		font.dispose();
 	}
 }
-
-
-/*
-public class IetiGame extends ApplicationAdapter {
-	SpriteBatch batch;
-	Texture img;
-	
-	@Override
-	public void create () {
-		batch = new SpriteBatch();
-		img = new Texture("badlogic.jpg");
-	}
-
-	@Override
-	public void render () {
-		Gdx.gl.glClearColor(1, 0, 0, 1);
-		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-		batch.begin();
-		batch.draw(img, 0, 0);
-		batch.end();
-	}
-	
-	@Override
-	public void dispose () {
-		batch.dispose();
-		img.dispose();
-	}
-}
-*/
