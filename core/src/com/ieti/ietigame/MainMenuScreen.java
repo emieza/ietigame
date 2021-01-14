@@ -22,9 +22,8 @@ public class MainMenuScreen implements Screen {
 
         camera.update();
         game.batch.begin();
-        game.font.draw(game.batch, "Bevinguts a IETI GAMES !",100,150);
+        game.font.draw(game.batch,"Bevinguts a IETI GAMES !",100,150);
         game.font.draw(game.batch,"Toca on vulguis per començar :)",100,100);
-        game.font.draw(game.batch,"Delta="+Float.toString(delta),100,50);
         game.batch.end();
 
         if( Gdx.input.isTouched() ) {
